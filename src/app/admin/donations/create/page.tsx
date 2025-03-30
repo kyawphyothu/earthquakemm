@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,19 @@ const formSchema = z.object({
   dateTime: z.string().refine(val => !isNaN(Date.parse(val)), {
     message: "Please enter a valid date and time"
   })
+}).refine(data => {
+  // KPay must use MMK
+  if (data.method === "KPay" && data.currency !== "MMK") {
+    return false;
+  }
+  // BIDV must use VND
+  if (data.method === "BIDV" && data.currency !== "VND") {
+    return false;
+  }
+  return true;
+}, {
+  message: "Currency must match payment method (KPay uses MMK, BIDV uses VND)",
+  path: ["currency"]
 });
 
 export default function CreateDonationPage() {
@@ -39,6 +52,17 @@ export default function CreateDonationPage() {
       dateTime: new Date().toISOString().slice(0, 16) // Format: YYYY-MM-DDTHH:MM
     },
   });
+
+  // Watch the payment method to auto-select the appropriate currency
+  const watchMethod = form.watch("method");
+
+  useEffect(() => {
+    if (watchMethod === "KPay") {
+      form.setValue("currency", "MMK");
+    } else if (watchMethod === "BIDV") {
+      form.setValue("currency", "VND");
+    }
+  }, [watchMethod, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -136,7 +160,9 @@ export default function CreateDonationPage() {
                         <FormControl>
                           <Input type="number" step="0.01" placeholder="0.00" {...field} disabled={isLoading} />
                         </FormControl>
-                        <FormMessage />
+                        <div className="h-5"> {/* Empty container for consistent spacing */}
+                          <FormMessage />
+                        </div>
                       </FormItem>
                     )}
                   />
@@ -147,18 +173,26 @@ export default function CreateDonationPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Currency</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
-                          <FormControl>
+                        <FormControl>
+                          <Select 
+                            onValueChange={field.onChange} 
+                            defaultValue={field.value} 
+                            disabled={isLoading || watchMethod === "KPay" || watchMethod === "BIDV"}
+                          >
                             <SelectTrigger>
                               <SelectValue placeholder="Select currency" />
                             </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="MMK">MMK (Kyat)</SelectItem>
-                            <SelectItem value="VND">VND (Vietnamese Dong)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
+                            <SelectContent>
+                              <SelectItem value="MMK">MMK (Kyat)</SelectItem>
+                              <SelectItem value="VND">VND (Vietnamese Dong)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <div className="h-5 text-xs text-muted-foreground">
+                          {watchMethod === "KPay" && "KPay only supports MMK"}
+                          {watchMethod === "BIDV" && "BIDV only supports VND"}
+                          <FormMessage />
+                        </div>
                       </FormItem>
                     )}
                   />
@@ -171,20 +205,22 @@ export default function CreateDonationPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Payment Method</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
-                          <FormControl>
+                        <FormControl>
+                          <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
                             <SelectTrigger>
                               <SelectValue placeholder="Select method" />
                             </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="KPay">KPay</SelectItem>
-                            <SelectItem value="BIDV">BIDV</SelectItem>
-                            <SelectItem value="Cash">Cash</SelectItem>
-                            <SelectItem value="Other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
+                            <SelectContent>
+                              <SelectItem value="KPay">KPay (MMK only)</SelectItem>
+                              <SelectItem value="BIDV">BIDV (VND only)</SelectItem>
+                              <SelectItem value="Cash">Cash</SelectItem>
+                              <SelectItem value="Other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <div className="h-5"> {/* Empty container for consistent spacing */}
+                          <FormMessage />
+                        </div>
                       </FormItem>
                     )}
                   />
@@ -198,7 +234,9 @@ export default function CreateDonationPage() {
                         <FormControl>
                           <Input type="datetime-local" {...field} disabled={isLoading} />
                         </FormControl>
-                        <FormMessage />
+                        <div className="h-5"> {/* Empty container for consistent spacing */}
+                          <FormMessage />
+                        </div>
                       </FormItem>
                     )}
                   />

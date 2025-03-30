@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { z } from "zod";
 
-// Update the schema to properly handle date conversion
+// Update the schema to enforce currency rules based on payment method
 const donationSchema = z.object({
   donorName: z.string().optional(),
   amount: z.number().positive("Amount must be positive"),
@@ -15,6 +15,19 @@ const donationSchema = z.object({
       errorMap: () => ({ message: "Invalid date format" })
     })
   )
+}).refine(data => {
+  // KPay must use MMK
+  if (data.method === "KPay" && data.currency !== "MMK") {
+    return false;
+  }
+  // BIDV must use VND
+  if (data.method === "BIDV" && data.currency !== "VND") {
+    return false;
+  }
+  return true;
+}, {
+  message: "Currency must match payment method (KPay uses MMK, BIDV uses VND)",
+  path: ["currency"]
 });
 
 export async function POST(request: NextRequest) {
