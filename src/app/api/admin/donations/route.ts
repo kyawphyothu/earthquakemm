@@ -4,12 +4,17 @@ import { prisma } from "@/lib/db";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { z } from "zod";
 
+// Update the schema to properly handle date conversion
 const donationSchema = z.object({
   donorName: z.string().optional(),
   amount: z.number().positive("Amount must be positive"),
   currency: z.enum(["MMK", "VND"]),
   method: z.enum(["KPay", "BIDV", "Cash", "Other"]),
-  dateTime: z.date()
+  dateTime: z.string().or(z.date()).pipe(
+    z.coerce.date({
+      errorMap: () => ({ message: "Invalid date format" })
+    })
+  )
 });
 
 export async function POST(request: NextRequest) {

@@ -53,7 +53,8 @@ export default function CreateDonationPage() {
         },
         body: JSON.stringify({
           ...values,
-          dateTime: new Date(values.dateTime)
+          // Send the dateTime as an ISO string which the API will convert to a Date
+          dateTime: values.dateTime
         }),
       });
 
