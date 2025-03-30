@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Myanmar Earthquake Relief Fund",
+  icons: {
+    icon: "/mm.png",
+  },
   description: "Support victims of the recent Myanmar earthquake by donating to our relief fund. Every contribution helps with emergency aid, medical care, and recovery efforts.",
   keywords: ["Myanmar", "earthquake", "disaster relief", "fundraising", "donations", "humanitarian aid"],
   openGraph: {
