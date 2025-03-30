@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import Link from 'next/link';
 import { LogoutButton } from '@/components/auth/logout-button';
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function AdminLayout({
