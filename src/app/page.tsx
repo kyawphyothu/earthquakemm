@@ -4,8 +4,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 export default async function Home() {
+  // Check if user is authenticated
+  const session = await getServerSession(authOptions)
+  const isAuthenticated = !!session
+
   // Get total donations count (no longer using users table for this)
   const totalDonations = await prisma.transaction.count()
   
@@ -232,14 +238,17 @@ export default async function Home() {
           </p>
         </div>
         
-        <div className="mt-8 text-center">
-          <Link 
-            href="/admin" 
-            className="py-2 px-4 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-          >
-            Admin Dashboard
-          </Link>
-        </div>
+        {/* Only show Admin Dashboard button to authenticated users */}
+        {isAuthenticated && (
+          <div className="mt-8 text-center">
+            <Link 
+              href="/admin" 
+              className="py-2 px-4 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+            >
+              Admin Dashboard
+            </Link>
+          </div>
+        )}
       </main>
     </div>
   )
