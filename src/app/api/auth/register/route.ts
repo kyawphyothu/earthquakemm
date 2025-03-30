@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { z } from "zod";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 // Define validation schema
 const userSchema = z.object({
@@ -12,6 +14,15 @@ const userSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if user is authenticated
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { message: "Unauthorized. Only authenticated users can create new accounts." },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     
     // Validate input

@@ -64,8 +64,8 @@ export default function Register() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
-          <CardDescription>Enter your details to register</CardDescription>
+          <CardTitle className="text-2xl font-bold">Create an Admin Account</CardTitle>
+          <CardDescription>Create another admin user (admin only access)</CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
