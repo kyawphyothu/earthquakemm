@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Define validation schema without email
 const formSchema = z.object({
@@ -18,11 +18,6 @@ const formSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
-
-// export const metadata: Metadata = {
-//   title: "Register | Car Wash Booking",
-//   description: "Create a new account",
-// };
 
 export default function Register() {
   const router = useRouter();
@@ -74,9 +69,9 @@ export default function Register() {
         </CardHeader>
         <CardContent>
           {error && (
-            <div className="bg-red-50 text-red-500 rounded-md p-3 mb-4 text-sm">
-              {error}
-            </div>
+            <Alert className="mb-4 bg-red-50 text-red-500">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
           
           <Form {...form}>
