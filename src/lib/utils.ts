@@ -19,10 +19,14 @@ export function formatDate(date: Date): string {
 }
 
 /**
- * Format currency based on the currency code
+ * Format currency based on the currency code with comma separators
  */
 export function formatCurrency(amount: number, currency: string): string {
-  const formattedAmount = amount.toFixed(2);
+  // Format with commas and 2 decimal places
+  const formattedAmount = amount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
   
   switch (currency) {
     case 'MMK':

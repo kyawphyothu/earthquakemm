@@ -144,24 +144,24 @@ export default async function Home() {
                   <div className="space-y-4">
                     <div className="bg-secondary/20 rounded-lg p-4">
                       <div className="text-sm text-muted-foreground">Total Donations (MMK)</div>
-                      <div className="text-2xl font-bold">{mmkTotal._sum.amount?.toFixed(2) || '0.00'} Ks</div>
+                      <div className="text-2xl font-bold">{formatCurrency(mmkTotal._sum.amount || 0, "MMK")}</div>
                     </div>
                     
                     <div className="bg-secondary/20 rounded-lg p-4">
                       <div className="text-sm text-muted-foreground">Today's Donations (MMK)</div>
-                      <div className="text-2xl font-bold">{todayMMKTotal._sum.amount?.toFixed(2) || '0.00'} Ks</div>
+                      <div className="text-2xl font-bold">{formatCurrency(todayMMKTotal._sum.amount || 0, "MMK")}</div>
                     </div>
                   </div>
                   
                   <div className="space-y-4">
                     <div className="bg-secondary/20 rounded-lg p-4">
                       <div className="text-sm text-muted-foreground">Total Donations (VND)</div>
-                      <div className="text-2xl font-bold">{vndTotal._sum.amount?.toFixed(2) || '0.00'} ₫</div>
+                      <div className="text-2xl font-bold">{formatCurrency(vndTotal._sum.amount || 0, "VND")}</div>
                     </div>
                     
                     <div className="bg-secondary/20 rounded-lg p-4">
                       <div className="text-sm text-muted-foreground">Today's Donations (VND)</div>
-                      <div className="text-2xl font-bold">{todayVNDTotal._sum.amount?.toFixed(2) || '0.00'} ₫</div>
+                      <div className="text-2xl font-bold">{formatCurrency(todayVNDTotal._sum.amount || 0, "VND")}</div>
                     </div>
                   </div>
                 </div>
@@ -203,14 +203,14 @@ export default async function Home() {
           
           <div className="bg-card rounded-lg shadow p-6 text-center">
             <div className="flex flex-col gap-1">
-              <h2 className="text-xl font-bold">{mmkTotal._sum.amount?.toFixed(2) || '0.00'} Ks</h2>
+              <h2 className="text-xl font-bold">{formatCurrency(mmkTotal._sum.amount || 0, "MMK")}</h2>
               <p className="text-muted-foreground">Total MMK Raised</p>
             </div>
           </div>
           
           <div className="bg-card rounded-lg shadow p-6 text-center">
             <div className="flex flex-col gap-1">
-              <h2 className="text-xl font-bold">{vndTotal._sum.amount?.toFixed(2) || '0.00'} ₫</h2>
+              <h2 className="text-xl font-bold">{formatCurrency(vndTotal._sum.amount || 0, "VND")}</h2>
               <p className="text-muted-foreground">Total VND Raised</p>
             </div>
           </div>

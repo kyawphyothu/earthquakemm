@@ -91,22 +91,22 @@ export default async function AdminPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-secondary/20 rounded-lg p-4">
                 <div className="text-sm text-muted-foreground">Total MMK</div>
-                <div className="text-2xl font-bold">{mmkTotal._sum.amount?.toFixed(2) || '0.00'} Ks</div>
+                <div className="text-2xl font-bold">{formatCurrency(mmkTotal._sum.amount || 0, "MMK")}</div>
               </div>
               
               <div className="bg-secondary/20 rounded-lg p-4">
                 <div className="text-sm text-muted-foreground">Total VND</div>
-                <div className="text-2xl font-bold">{vndTotal._sum.amount?.toFixed(2) || '0.00'} ₫</div>
+                <div className="text-2xl font-bold">{formatCurrency(vndTotal._sum.amount || 0, "VND")}</div>
               </div>
               
               <div className="bg-secondary/20 rounded-lg p-4">
                 <div className="text-sm text-muted-foreground">Today's MMK</div>
-                <div className="text-2xl font-bold">{todayMMKTotal._sum.amount?.toFixed(2) || '0.00'} Ks</div>
+                <div className="text-2xl font-bold">{formatCurrency(todayMMKTotal._sum.amount || 0, "MMK")}</div>
               </div>
               
               <div className="bg-secondary/20 rounded-lg p-4">
                 <div className="text-sm text-muted-foreground">Today's VND</div>
-                <div className="text-2xl font-bold">{todayVNDTotal._sum.amount?.toFixed(2) || '0.00'} ₫</div>
+                <div className="text-2xl font-bold">{formatCurrency(todayVNDTotal._sum.amount || 0, "VND")}</div>
               </div>
             </div>
             
