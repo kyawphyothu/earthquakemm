@@ -24,7 +24,7 @@ async function main() {
     }
   });
 
-  console.log(`Created admin user: ${admin.username}`);
+  console.log(`Created admin: ${admin.username}`);
   
   // You could add sample transactions here if needed
 }
