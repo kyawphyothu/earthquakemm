@@ -26,7 +26,6 @@ export default async function AdminLayout({
               {/* <Link href="/admin" className="px-3 py-1 rounded-md hover:bg-muted text-sm font-medium transition-colors">Dashboard</Link> */}
               <Link href="/admin/donations" className="px-3 py-1 rounded-md hover:bg-muted text-sm font-medium transition-colors">Donations</Link>
               <Link href="/admin/donations/create" className="px-3 py-1 rounded-md hover:bg-muted text-sm font-medium transition-colors">Add Donation</Link>
-              {/* <Link href="/admin/users" className="px-3 py-1 rounded-md hover:bg-muted text-sm font-medium transition-colors">Admin Users</Link> */}
               <Link href="/" className="px-3 py-1 rounded-md hover:bg-muted text-sm font-medium transition-colors">Public Site</Link>
               <div className="ml-0 md:ml-4 mt-2 md:mt-0 pt-2 md:pt-0 border-t md:border-t-0 md:border-l md:pl-4 flex items-center gap-3 w-full md:w-auto">
                 <span className="text-sm text-muted-foreground">
