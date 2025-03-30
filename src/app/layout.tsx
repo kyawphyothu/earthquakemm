@@ -22,14 +22,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Myanmar Earthquake Relief Fund",
     description: "Support victims of the recent Myanmar earthquake by donating to our relief fund.",
-    images: [{ url: "/mm.jpg" }],
+    images: [{ url: "/mm.png" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Myanmar Earthquake Relief Fund",
     description: "Support victims of the recent Myanmar earthquake by donating to our relief fund.",
-    images: ["/mm.jpg"],
+    images: ["/mm.png"],
   },
 };
 
