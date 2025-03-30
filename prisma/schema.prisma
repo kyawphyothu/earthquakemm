@@ -27,7 +27,9 @@ model User {
 model Transaction {
   id        Int      @id @default(autoincrement())
   amount    Float
-  currency  String   @default("MMK")  // Add currency field with default MMK
+  currency  String   @default("MMK")
+  donorName String?  // Optional donor name for manual entries
+  method    String   @default("Other") // Payment method (KPay, BIDV, Cash, etc.)
   dateTime  DateTime @map("date_time")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
