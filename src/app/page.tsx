@@ -1,33 +1,58 @@
 import { prisma } from '@/lib/db'
-import { formatDate } from '@/lib/utils'
+import { formatDate, formatCurrency } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default async function Home() {
-  const totalDonors = await prisma.user.count()
-  
-  // Get all donations for total amount
+  // Get total donations count (no longer using users table for this)
   const totalDonations = await prisma.transaction.count()
-  const totalAmount = await prisma.transaction.aggregate({
+  
+  // Get all-time totals by currency
+  const mmkTotal = await prisma.transaction.aggregate({
     _sum: {
       amount: true
+    },
+    where: {
+      currency: "MMK"
     }
   })
   
-  // Get today's donations
+  const vndTotal = await prisma.transaction.aggregate({
+    _sum: {
+      amount: true
+    },
+    where: {
+      currency: "VND"
+    }
+  })
+  
+  // Get today's donations by currency
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   
-  const todayTotal = await prisma.transaction.aggregate({
+  const todayMMKTotal = await prisma.transaction.aggregate({
     _sum: {
       amount: true
     },
     where: {
       dateTime: {
         gte: today
-      }
+      },
+      currency: "MMK"
+    }
+  })
+  
+  const todayVNDTotal = await prisma.transaction.aggregate({
+    _sum: {
+      amount: true
+    },
+    where: {
+      dateTime: {
+        gte: today
+      },
+      currency: "VND"
     }
   })
   
@@ -39,9 +64,9 @@ export default async function Home() {
     }
   })
   
-  // Helper function to generate anonymous identifiers
+  // Helper function to generate anonymous identifiers for donors
   const generateDonorName = (id: number) => {
-    return `Do****${id.toString().slice(-3)}`
+    return `Donor-${id.toString().slice(-3)}`
   }
 
   return (
@@ -73,7 +98,7 @@ export default async function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <Card className="overflow-hidden">
                 <CardHeader>
-                  <CardTitle>Mobile Banking</CardTitle>
+                  <CardTitle>Mobile Banking (MMK)</CardTitle>
                   <CardDescription>Scan this QR code to donate via your mobile banking app</CardDescription>
                 </CardHeader>
                 <CardContent className="flex justify-center">
@@ -91,7 +116,7 @@ export default async function Home() {
               
               <Card className="overflow-hidden">
                 <CardHeader>
-                  <CardTitle>International Transfers</CardTitle>
+                  <CardTitle>International Transfers (VND)</CardTitle>
                   <CardDescription>For donors outside Myanmar</CardDescription>
                 </CardHeader>
                 <CardContent className="flex justify-center">
@@ -115,21 +140,35 @@ export default async function Home() {
                 <CardTitle>Donation Summary</CardTitle>
                 <CardDescription>Together we can make a difference</CardDescription>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                  <div className="bg-secondary/20 rounded-lg p-4">
-                    <div className="text-sm text-muted-foreground">Total Donations</div>
-                    <div className="text-2xl font-bold">${totalAmount._sum.amount?.toFixed(2) || '0.00'}</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div className="space-y-4">
+                    <div className="bg-secondary/20 rounded-lg p-4">
+                      <div className="text-sm text-muted-foreground">Total Donations (MMK)</div>
+                      <div className="text-2xl font-bold">{mmkTotal._sum.amount?.toFixed(2) || '0.00'} Ks</div>
+                    </div>
+                    
+                    <div className="bg-secondary/20 rounded-lg p-4">
+                      <div className="text-sm text-muted-foreground">Today's Donations (MMK)</div>
+                      <div className="text-2xl font-bold">{todayMMKTotal._sum.amount?.toFixed(2) || '0.00'} Ks</div>
+                    </div>
                   </div>
                   
-                  <div className="bg-secondary/20 rounded-lg p-4">
-                    <div className="text-sm text-muted-foreground">Today's Donations</div>
-                    <div className="text-2xl font-bold">${todayTotal._sum.amount?.toFixed(2) || '0.00'}</div>
+                  <div className="space-y-4">
+                    <div className="bg-secondary/20 rounded-lg p-4">
+                      <div className="text-sm text-muted-foreground">Total Donations (VND)</div>
+                      <div className="text-2xl font-bold">{vndTotal._sum.amount?.toFixed(2) || '0.00'} ₫</div>
+                    </div>
+                    
+                    <div className="bg-secondary/20 rounded-lg p-4">
+                      <div className="text-sm text-muted-foreground">Today's Donations (VND)</div>
+                      <div className="text-2xl font-bold">{todayVNDTotal._sum.amount?.toFixed(2) || '0.00'} ₫</div>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
               
               <CardContent>
-                <h3 className="text-lg font-medium mb-4">Recent Donors</h3>
+                <h3 className="text-lg font-medium mb-4">Recent Anonymous Donations</h3>
                 <div className="space-y-4">
                   {recentDonations.length === 0 ? (
                     <p className="text-muted-foreground text-center py-4">No donations received yet. Be the first to donate!</p>
@@ -139,7 +178,9 @@ export default async function Home() {
                         <div>
                           <p className="font-medium">{generateDonorName(donation.id)}</p>
                           <p className="text-sm text-muted-foreground">
-                            Donated <span className="text-primary font-medium">${donation.amount.toFixed(2)}</span>
+                            Donated <span className="text-primary font-medium">
+                              {formatCurrency(donation.amount, donation.currency)}
+                            </span>
                           </p>
                         </div>
                         <div className="text-sm text-muted-foreground">
@@ -156,20 +197,22 @@ export default async function Home() {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-card rounded-lg shadow p-6 text-center">
-            <h2 className="text-2xl font-bold mb-2">{totalDonors}</h2>
-            <p className="text-muted-foreground">Generous Donors</p>
-          </div>
-          
-          <div className="bg-card rounded-lg shadow p-6 text-center">
             <h2 className="text-2xl font-bold mb-2">{totalDonations}</h2>
-            <p className="text-muted-foreground">Total Donations</p>
+            <p className="text-muted-foreground">Donations Received</p>
           </div>
           
           <div className="bg-card rounded-lg shadow p-6 text-center">
-            <h2 className="text-2xl font-bold mb-2">
-              ${totalAmount._sum.amount?.toFixed(2) || '0.00'}
-            </h2>
-            <p className="text-muted-foreground">Total Amount Raised</p>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-xl font-bold">{mmkTotal._sum.amount?.toFixed(2) || '0.00'} Ks</h2>
+              <p className="text-muted-foreground">Total MMK Raised</p>
+            </div>
+          </div>
+          
+          <div className="bg-card rounded-lg shadow p-6 text-center">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-xl font-bold">{vndTotal._sum.amount?.toFixed(2) || '0.00'} ₫</h2>
+              <p className="text-muted-foreground">Total VND Raised</p>
+            </div>
           </div>
         </div>
         
