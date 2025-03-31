@@ -1,8 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import Link from "next/link";
-import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
