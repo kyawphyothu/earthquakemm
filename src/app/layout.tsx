@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +14,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EarthquakeReliefMyanmar",
-  description: "EarthquakeReliefMyanmar",
+  title: "Myanmar Earthquake Relief Fund",
+  icons: {
+    icon: "/mm.png",
+  },
+  description: "Support victims of the recent Myanmar earthquake by donating to our relief fund. Every contribution helps with emergency aid, medical care, and recovery efforts.",
+  keywords: ["Myanmar", "earthquake", "disaster relief", "fundraising", "donations", "humanitarian aid"],
+  openGraph: {
+    title: "Myanmar Earthquake Relief Fund",
+    description: "Support victims of the recent Myanmar earthquake by donating to our relief fund.",
+    images: [{ url: "/mm.png" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Myanmar Earthquake Relief Fund",
+    description: "Support victims of the recent Myanmar earthquake by donating to our relief fund.",
+    images: ["/mm.png"],
+  },
 };
 
 export default function RootLayout({
@@ -28,6 +45,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );

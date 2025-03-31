@@ -24,8 +24,8 @@ export function formatDate(date: Date): string {
 export function formatCurrency(amount: number, currency: string): string {
   // Format with commas and 2 decimal places
   const formattedAmount = amount.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
   });
   
   switch (currency) {

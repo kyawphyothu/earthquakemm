@@ -1,3 +1,21 @@
+import type { Metadata } from 'next'
+import { prisma } from '@/lib/db'
+import { formatDate, formatCurrency } from '@/lib/utils'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/lib/auth"
+
+export const metadata: Metadata = {
+  title: 'Donate to Support Earthquake Victims',
+  description: 'Make a difference by donating to the Myanmar Earthquake Relief Fund. Your contribution helps provide emergency shelter, food, water, and medical supplies to those affected.',
+  openGraph: {
+    title: 'Donate to Myanmar Earthquake Relief Fund',
+    description: 'Your donation can help save lives and rebuild communities affected by the recent earthquake in Myanmar.',
+  }
+}
 import { prisma } from "@/lib/db";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import Link from "next/link";
@@ -122,6 +140,8 @@ export default async function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <Card className="overflow-hidden">
                 <CardHeader>
+                  <CardTitle>KBZPay (MMK)</CardTitle>
+                  <CardDescription>Scan this QR code to donate via KBZPay app</CardDescription>
                   <CardTitle>Mobile Banking (MMK)</CardTitle>
                   <CardDescription>
                     Scan this QR code to donate via your mobile banking app
@@ -129,12 +149,18 @@ export default async function Home() {
                 </CardHeader>
                 <CardContent className="flex justify-center">
                   <div className="bg-white p-4 rounded-md border">
-                    <div className="w-[200px] h-[200px] bg-zinc-100 flex items-center justify-center text-sm text-zinc-500">
-                      QR Code 1
-                    </div>
+                    <Image 
+                      src="/qr/kpay.jpg" 
+                      alt="KBZPay QR Code" 
+                      width={200} 
+                      height={200} 
+                      className="w-[200px] h-[200px] object-cover"
+                    />
                   </div>
                 </CardContent>
                 <div className="p-4 bg-muted/20 border-t text-center">
+                  <p className="font-medium">KBZPay: Seng Jat Naw</p>
+                  <p className="text-sm text-muted-foreground mt-1">Account: ******6187 (MMK)</p>
                   <p className="font-medium">
                     Bank Account: 1234-5678-9012-3456
                   </p>
@@ -146,17 +172,23 @@ export default async function Home() {
 
               <Card className="overflow-hidden">
                 <CardHeader>
-                  <CardTitle>International Transfers (VND)</CardTitle>
+                  <CardTitle>BIDV VietQR (VND)</CardTitle>
                   <CardDescription>For donors outside Myanmar</CardDescription>
                 </CardHeader>
                 <CardContent className="flex justify-center">
                   <div className="bg-white p-4 rounded-md border">
-                    <div className="w-[200px] h-[200px] bg-zinc-100 flex items-center justify-center text-sm text-zinc-500">
-                      QR Code 2
-                    </div>
+                    <Image 
+                      src="/qr/bidv.jpg" 
+                      alt="BIDV VietQR Code" 
+                      width={200} 
+                      height={200}
+                      className="w-[200px] h-[200px] object-cover"
+                    />
                   </div>
                 </CardContent>
                 <div className="p-4 bg-muted/20 border-t text-center">
+                  <p className="font-medium">BIDV: Seng Jat Naw</p>
+                  <p className="text-sm text-muted-foreground mt-1">Account: 8894044543 (VND)</p>
                   <p className="font-medium">SWIFT: MYANMARRELIEF</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     International Aid Network
