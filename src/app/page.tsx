@@ -139,10 +139,6 @@ export default async function Home() {
                   <CardDescription>
                     Scan this QR code to donate via KBZPay app
                   </CardDescription>
-                  <CardTitle>Mobile Banking (MMK)</CardTitle>
-                  <CardDescription>
-                    Scan this QR code to donate via your mobile banking app
-                  </CardDescription>
                 </CardHeader>
                 <CardContent className="flex justify-center">
                   <div className="bg-white p-4 rounded-md border">
@@ -159,12 +155,6 @@ export default async function Home() {
                   <p className="font-medium">KBZPay: Seng Jat Naw</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     Account: ******6187 (MMK)
-                  </p>
-                  <p className="font-medium">
-                    Bank Account: 1234-5678-9012-3456
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Myanmar Relief Foundation
                   </p>
                 </div>
               </Card>
@@ -189,10 +179,6 @@ export default async function Home() {
                   <p className="font-medium">BIDV: Seng Jat Naw</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     Account: 8894044543 (VND)
-                  </p>
-                  <p className="font-medium">SWIFT: MYANMARRELIEF</p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    International Aid Network
                   </p>
                 </div>
               </Card>
